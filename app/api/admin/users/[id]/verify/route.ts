@@ -5,7 +5,7 @@ import { sendEmail } from "@/lib/email"
 import { corsHeaders } from "@/lib/cors"
 
 export async function OPTIONS(req: Request) {
-  return NextResponse.json({}, { headers: corsHeaders(req) })
+  return NextResponse.json({}, { headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
@@ -14,11 +14,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const { status } = await req.json()
 
     if (!id) {
-      return NextResponse.json({ error: "User ID is required" }, { status: 400, headers: corsHeaders(req) })
+      return NextResponse.json({ error: "User ID is required" }, { status: 400, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
     }
 
     if (!Object.values(VerificationStatus).includes(status as VerificationStatus)) {
-      return NextResponse.json({ error: "Invalid status" }, { status: 400, headers: corsHeaders(req) })
+      return NextResponse.json({ error: "Invalid status" }, { status: 400, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
     }
 
     const user = await db.user.update({
@@ -62,11 +62,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         user,
         message: `User verification status updated to ${status}`,
       },
-      { headers: corsHeaders(req) },
+      { headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) },
     )
   } catch (error) {
     console.error("UPDATE_VERIFICATION_ERROR", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: corsHeaders(req) })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
   }
 }
 

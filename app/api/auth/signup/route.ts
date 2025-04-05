@@ -7,7 +7,7 @@ import { sendEmail } from "@/lib/email"
 import { corsHeaders } from "@/lib/cors"
 
 export async function OPTIONS(req: Request) {
-  return NextResponse.json({}, { headers: corsHeaders(req) })
+  return NextResponse.json({}, { headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
 }
 
 export async function POST(req: Request) {
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     })
 
     if (existingUser) {
-      return NextResponse.json({ error: "Email already exists" }, { status: 409, headers: corsHeaders(req) })
+      return NextResponse.json({ error: "Email already exists" }, { status: 409, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
     }
 
     // Hash password
@@ -126,11 +126,11 @@ export async function POST(req: Request) {
         user: userWithoutPassword,
         message: "User created successfully. Awaiting verification.",
       },
-      { status: 201, headers: corsHeaders(req) },
+      { status: 201, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) },
     )
   } catch (error) {
     console.error("SIGNUP_ERROR", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: corsHeaders(req) })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) })
   }
 }
 

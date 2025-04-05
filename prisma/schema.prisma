@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  RETAILER
+  WHOLESALER
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id                String             @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  email             String             @unique
+  password          String
+  mobileNumber      String
+  role              UserRole           @default(RETAILER)
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  retailerProfile   RetailerProfile?
+  wholesalerProfile WholesalerProfile?
+}
+
+model RetailerProfile {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  shopName        String
+  shopAddress     String
+  gstNumber       String
+  licenseNumber   String
+  aadharCardNumber String
+  panCardNumber   String
+  referralCode    String?
+  shopImage       String?
+  aadharImage     String?
+  panImage        String?
+  licenseImage    String?
+  
+  // Relation to User
+  userId          String  @unique @db.ObjectId
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WholesalerProfile {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  companyName     String
+  companyAddress  String
+  gstNumber       String
+  licenseNumber   String
+  aadharCardNumber String
+  panCardNumber   String
+  companyImage    String?
+  aadharImage     String?
+  panImage        String?
+  licenseImage    String?
+  
+  // Relation to User
+  userId          String  @unique @db.ObjectId
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+

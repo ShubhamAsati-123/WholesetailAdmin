@@ -19,7 +19,7 @@ export async function sendEmail({ to, subject, template, data }: SendEmailProps)
 
     // Send email using Resend
     const { data: response, error } = await resend.emails.send({
-      from: `Wholesetail <${process.env.EMAIL_FROM}>`,
+      from: `${process.env.EMAIL_FROM}`,
       to,
       subject,
       html: htmlContent,

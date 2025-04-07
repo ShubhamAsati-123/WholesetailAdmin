@@ -41,15 +41,47 @@ function getEmailTemplate(template: EmailTemplate, data: Record<string, any>): s
   switch (template) {
     case "verification-approved":
       return `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1 style="color: #4CAF50; text-align: center;">Verification Approved</h1>
-          <p>Hello ${data.name},</p>
-          <p>We're pleased to inform you that your account has been verified and approved. You can now log in to your account and start using our services.</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/login" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Log In Now</a>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333333;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #4CAF50; margin-bottom: 5px;">Account Verification Approved</h1>
+            <div style="height: 3px; background-color: #4CAF50; width: 100px; margin: 0 auto;"></div>
           </div>
-          <p>Thank you for choosing Wholesetail.</p>
-          <p>Best regards,<br>The Wholesetail Team</p>
+          
+          <p style="font-size: 16px; line-height: 1.5;">Dear ${data.name},</p>
+          
+          <p style="font-size: 16px; line-height: 1.5;">We are pleased to inform you that your account verification for Wholesetail has been <strong>successfully approved</strong>.</p>
+          
+          <p style="font-size: 16px; line-height: 1.5;">You now have full access to all features and services offered by our platform. You can log in to your account using the email and password you provided during registration.</p>
+          
+          <div style="background-color: #f9f9f9; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; font-size: 16px;">
+              <strong>Next Steps:</strong>
+            </p>
+            <ul style="margin-top: 10px; padding-left: 20px;">
+              <li style="margin-bottom: 8px;">Log in to your account</li>
+              <li style="margin-bottom: 8px;">Complete your profile information</li>
+              <li style="margin-bottom: 8px;">Explore our platform features</li>
+              <li style="margin-bottom: 0;">Start using our services</li>
+            </ul>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/login" style="background-color: #4CAF50; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Log In To Your Account</a>
+          </div>
+          
+          <p style="font-size: 16px; line-height: 1.5;">If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+          
+          <p style="font-size: 16px; line-height: 1.5;">Thank you for choosing Wholesetail. We look forward to serving you.</p>
+          
+          <p style="font-size: 16px; line-height: 1.5;">
+            Sincerely,<br>
+            The Wholesetail Team
+          </p>
+          
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eeeeee; text-align: center; color: #777777; font-size: 12px;">
+            <p>This is an automated message, please do not reply to this email.</p>
+            <p>&copy; ${new Date().getFullYear()} Wholesetail. All rights reserved.</p>
+          </div>
         </div>
       `
     case "verification-rejected":
@@ -63,6 +95,16 @@ function getEmailTemplate(template: EmailTemplate, data: Record<string, any>): s
             <li>Unclear images of your documents</li>
             <li>Information mismatch between your application and documents</li>
           </ul>
+          ${
+            data.notes
+              ? `
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+            <p style="margin: 0; font-weight: bold;">Reviewer Notes:</p>
+            <p style="margin: 10px 0 0 0;">${data.notes}</p>
+          </div>
+          `
+              : ""
+          }
           <p>You can reapply with the correct information and clear document images.</p>
           <p>If you have any questions, please contact our support team.</p>
           <p>Best regards,<br>The Wholesetail Team</p>

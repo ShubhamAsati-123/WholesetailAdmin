@@ -1,8 +1,11 @@
 import { Suspense } from "react"
-import { db } from "@/lib/db"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UserRound, ShieldCheck, AlertTriangle, Clock } from "lucide-react"
+import { db } from "@/lib/db"
+
+// Mark this as a server component with dynamic rendering
+export const dynamic = "force-dynamic"
 
 async function getDashboardData() {
   const [totalUsers, pendingVerifications, approvedVerifications, rejectedVerifications, recentUsers] =

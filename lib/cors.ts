@@ -12,7 +12,7 @@ const allowedOrigins = [
 ]
 
 export function corsHeaders(req: NextRequest | { headers: { origin?: string } }) {
-  const origin = req.headers instanceof Headers ? req.headers.get("origin") || "" : req.headers.origin || ""
+  const origin = req.headers.origin || ""
   const isAllowedOrigin = allowedOrigins.includes(origin) || !origin
 
   const headers = new Headers()

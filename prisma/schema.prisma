@@ -30,6 +30,7 @@ model User {
   mobileNumber      String
   role              UserRole           @default(RETAILER)
   verificationStatus VerificationStatus @default(PENDING)
+  verificationNotes  String?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   retailerProfile   RetailerProfile?

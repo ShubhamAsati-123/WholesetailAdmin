@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Eye } from "lucide-react"
 
+// Mark this as a server component with dynamic rendering
+export const dynamic = "force-dynamic"
+
 async function getUsers() {
   const users = await db.user.findMany({
     where: { role: { in: ["RETAILER", "WHOLESALER"] } },
@@ -111,7 +114,7 @@ async function UsersList() {
               <TableCell>{formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}</TableCell>
               <TableCell className="text-right">
                 <Button asChild size="sm" variant="ghost">
-                  <Link href={`/admin/users/${user.id}`}>
+                  <Link href={`/users/${user.id}`}>
                     <Eye className="mr-2 h-4 w-4" />
                     View
                   </Link>

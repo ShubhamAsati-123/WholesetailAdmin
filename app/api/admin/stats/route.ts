@@ -3,8 +3,7 @@ import { db } from "@/lib/db"
 import { corsHeaders } from "@/lib/cors"
 
 export async function OPTIONS(req: Request) {
-  const origin = req.headers.get("origin") || undefined
-  return NextResponse.json({}, { headers: corsHeaders({ headers: { origin } }) })
+  return NextResponse.json({}, { headers: corsHeaders(req) })
 }
 
 export async function GET(req: Request) {
@@ -55,14 +54,11 @@ export async function GET(req: Request) {
         rejectedVerifications,
         recentUsers,
       },
-      { headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) },
+      { headers: corsHeaders(req) },
     )
   } catch (error) {
     console.error("GET_STATS_ERROR", error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500, headers: corsHeaders({ headers: { origin: req.headers.get("origin") || undefined } }) }
-    )
+    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: corsHeaders(req) })
   }
 }
 

@@ -10,6 +10,10 @@ import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, ExternalLink } from "lucide-react"
 import { VerificationActions } from "./verification-actions"
 
+// Mark this as a server component
+export const dynamic = "force-dynamic"
+
+// This function runs on the server
 async function getUser(id: string) {
   try {
     const user = await db.user.findUnique({
@@ -28,8 +32,11 @@ async function getUser(id: string) {
   }
 }
 
-export default async function UserDetailPage({ params }: { params: { id: string } }) {
-  const user = await getUser(params.id)
+// This is a Server Component
+export default async function VerificationReviewPage({ params }: { params: { id: string } }) {
+  // Ensure params.id is a string
+  const id = params.id as string
+  const user = await getUser(id)
 
   if (!user) {
     notFound()
@@ -45,9 +52,9 @@ export default async function UserDetailPage({ params }: { params: { id: string 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button asChild variant="ghost" size="sm">
-            <Link href="/admin/users">
+            <Link href="/verification">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Users
+              Back to Verification Portal
             </Link>
           </Button>
         </div>
@@ -132,20 +139,18 @@ export default async function UserDetailPage({ params }: { params: { id: string 
                 </dl>
               </div>
 
-              {user.verificationStatus === "PENDING" && (
-                <div>
-                  <h3 className="text-sm font-medium">Verification Actions</h3>
-                  <Separator className="my-2" />
-                  <VerificationActions userId={user.id} />
-                </div>
-              )}
+              <div>
+                <h3 className="text-sm font-medium">Verification Decision</h3>
+                <Separator className="my-2" />
+                <VerificationActions userId={user.id} />
+              </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Uploaded Documents</CardTitle>
+            <CardTitle>Verification Documents</CardTitle>
             <CardDescription>Review the uploaded documents for verification</CardDescription>
           </CardHeader>
           <CardContent>
@@ -161,6 +166,7 @@ export default async function UserDetailPage({ params }: { params: { id: string 
                       alt="Business"
                       fill
                       className="object-cover"
+
                     />
                     <Button asChild size="sm" variant="secondary" className="absolute bottom-2 right-2">
                       <a
@@ -188,6 +194,7 @@ export default async function UserDetailPage({ params }: { params: { id: string 
                         alt="Aadhar Card"
                         fill
                         className="object-cover"
+
                       />
                       <Button asChild size="sm" variant="secondary" className="absolute bottom-2 right-2">
                         <a href={profile.aadharImage} target="_blank" rel="noopener noreferrer">
@@ -209,6 +216,7 @@ export default async function UserDetailPage({ params }: { params: { id: string 
                         alt="PAN Card"
                         fill
                         className="object-cover"
+
                       />
                       <Button asChild size="sm" variant="secondary" className="absolute bottom-2 right-2">
                         <a href={profile.panImage} target="_blank" rel="noopener noreferrer">

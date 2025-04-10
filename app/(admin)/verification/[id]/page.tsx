@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, ExternalLink } from "lucide-react"
 import { VerificationActions } from "./verification-actions"
+import { getToken } from "next-auth/jwt"
 
 // Mark this as a server component
 export const dynamic = "force-dynamic"
@@ -35,6 +36,7 @@ async function getUser(id: string) {
 // This is a Server Component
 export default async function VerificationReviewPage({ params }: { params: { id: string } }) {
   // Ensure params.id is a string
+  
   const id = params.id as string
   const user = await getUser(id)
 

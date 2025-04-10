@@ -1,19 +1,22 @@
-import { NextResponse } from "next/server"
-import { compare } from "bcrypt"
-import { sign } from "jsonwebtoken"
-import { db } from "@/lib/db"
-import { corsHeaders } from "@/lib/cors"
+import { NextResponse } from "next/server";
+import { compare } from "bcrypt";
+import { sign } from "jsonwebtoken";
+import { db } from "@/lib/db";
+import { corsHeaders } from "@/lib/cors";
 
 export async function OPTIONS(req: Request) {
-  return NextResponse.json({}, { headers: corsHeaders(req) })
+  return NextResponse.json({}, { headers: corsHeaders(req) });
 }
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json()
+    const { email, password } = await req.json();
 
     if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400, headers: corsHeaders(req) })
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400, headers: corsHeaders(req) }
+      );
     }
 
     // Find user by email
@@ -27,10 +30,13 @@ export async function POST(req: Request) {
         role: true,
         verificationStatus: true,
       },
-    })
+    });
 
     if (!user) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401, headers: corsHeaders(req) })
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401, headers: corsHeaders(req) }
+      );
     }
 
     // Check if user is verified
@@ -40,15 +46,18 @@ export async function POST(req: Request) {
           error: "Account not verified",
           verificationStatus: user.verificationStatus,
         },
-        { status: 403, headers: corsHeaders(req) },
-      )
+        { status: 403, headers: corsHeaders(req) }
+      );
     }
 
     // Verify password
-    const passwordMatch = await compare(password, user.password)
+    const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401, headers: corsHeaders(req) })
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401, headers: corsHeaders(req) }
+      );
     }
 
     // Generate JWT token
@@ -60,22 +69,27 @@ export async function POST(req: Request) {
         role: user.role,
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "7d" },
-    )
+      { expiresIn: "7d" }
+    );
 
     // Remove password from response
-    const { password: _, ...userWithoutPassword } = user
+    const { password: _, ...userWithoutPassword } = user;
+
+    // Log successful login
+    console.log(`User logged in successfully: ${user.email} (${user.role})`);
 
     return NextResponse.json(
       {
         user: userWithoutPassword,
         token,
       },
-      { headers: corsHeaders(req) },
-    )
+      { headers: corsHeaders(req) }
+    );
   } catch (error) {
-    console.error("LOGIN_ERROR", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: corsHeaders(req) })
+    console.error("LOGIN_ERROR", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500, headers: corsHeaders(req) }
+    );
   }
 }
-
